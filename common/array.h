@@ -162,9 +162,13 @@ public:
 
 	// TODO: insert, remove, ...
 
-	T& operator[](int idx) {
+	T& at(int idx) {
 		assert(idx >= 0 && (uint)idx < _size);
 		return _storage[idx];
+	}
+
+	T& operator[](int idx) {
+		return at(idx);
 	}
 
 	const T& operator[](int idx) const {
