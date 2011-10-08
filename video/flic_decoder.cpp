@@ -44,12 +44,18 @@ bool FlicDecoder::loadStream(Common::SeekableReadStream *stream) {
 
 	_fileStream = stream;
 
-	/* uint32 frameSize = */ _fileStream->readUint32LE();
-	uint16 frameType = _fileStream->readUint16LE();
+	uint32 fileSize = _fileStream->readUint32LE();
+	if (fileSize > _fileStream->size()) {
+		warning("FlicDecoder::FlicDecoder(): attempted to load non-FLC data (file is too small)");
+		delete _fileStream;
+		_fileStream = 0;
+		return false;
+	}
+	uint16 fileType = _fileStream->readUint16LE();
 
 	// Check FLC magic number
-	if (frameType != 0xAF12) {
-		warning("FlicDecoder::FlicDecoder(): attempted to load non-FLC data (type = 0x%04X)", frameType);
+	if (fileType != 0xAF12) {
+		warning("FlicDecoder::FlicDecoder(): attempted to load non-FLC data (type = 0x%04X)", fileType);
 		delete _fileStream;
 		_fileStream = 0;
 		return false;
@@ -61,7 +67,7 @@ bool FlicDecoder::loadStream(Common::SeekableReadStream *stream) {
 	uint16 height = _fileStream->readUint16LE();
 	uint16 colorDepth = _fileStream->readUint16LE();
 	if (colorDepth != 8) {
-		warning("FlicDecoder::FlicDecoder(): attempted to load an FLC with a palette of color depth %d. Only 8-bit color palettes are supported", frameType);
+		warning("FlicDecoder::FlicDecoder(): attempted to load an FLC with a palette of color depth %d. Only 8-bit color palettes are supported", fileType);
 		delete _fileStream;
 		_fileStream = 0;
 		return false;
@@ -72,7 +78,7 @@ bool FlicDecoder::loadStream(Common::SeekableReadStream *stream) {
 	// the frame delay is the FLIC "speed", in milliseconds.
 	_frameRate = Common::Rational(1000, _fileStream->readUint32LE());
 
-	_fileStream->seek(80);
+	_fileStream->seek(0x50);
 	_offsetFrame1 = _fileStream->readUint32LE();
 	_offsetFrame2 = _fileStream->readUint32LE();
 
@@ -81,6 +87,10 @@ bool FlicDecoder::loadStream(Common::SeekableReadStream *stream) {
 	_palette = (byte *)malloc(3 * 256);
 	memset(_palette, 0, 3 * 256);
 	_paletteChanged = false;
+
+	if (_offsetFrame1 > 0x80) {
+		readPrefixChunk();
+	}
 
 	// Seek to the first frame
 	_fileStream->seek(_offsetFrame1);
@@ -186,11 +196,13 @@ void FlicDecoder::decodeDeltaFLC(uint8 *data) {
 	}
 }
 
-#define FLI_SETPAL 4
-#define FLI_SS2    7
-#define FLI_BRUN   15
-#define PSTAMP     18
-#define FRAME_TYPE 0xF1FA
+#define CEL_DATA    3
+#define FLI_SETPAL  4
+#define FLI_SS2     7
+#define FLI_BRUN    15
+#define PSTAMP      18
+#define PREFIX_TYPE 0xF100
+#define FRAME_TYPE  0xF1FA
 
 const Graphics::Surface *FlicDecoder::decodeNextFrame() {
 	// Read chunk
@@ -236,11 +248,11 @@ const Graphics::Surface *FlicDecoder::decodeNextFrame() {
 	// Read subchunks
 	if (frameType == FRAME_TYPE) {
 		for (uint32 i = 0; i < chunkCount; ++i) {
-			frameSize = _fileStream->readUint32LE();
-			frameType = _fileStream->readUint16LE();
-			uint8 *data = new uint8[frameSize - 6];
-			_fileStream->read(data, frameSize - 6);
-			switch (frameType) {
+			uint32 subchunkSize = _fileStream->readUint32LE();
+			uint16 subchunkType = _fileStream->readUint16LE();
+			uint8 *data = new uint8[subchunkSize - 6];
+			_fileStream->read(data, subchunkSize - 6);
+			switch (subchunkType) {
 			case FLI_SETPAL:
 				unpackPalette(data);
 				_paletteChanged = true;
@@ -316,6 +328,32 @@ void FlicDecoder::copyDirtyRectsToBuffer(uint8 *dst, uint pitch) {
 		}
 	}
 	_dirtyRects.clear();
+}
+
+void FlicDecoder::readPrefixChunk()
+{
+	_fileStream->seek(0x80);
+	uint32 chunkSize = _fileStream->readUint32LE();
+	uint16 chunkType = _fileStream->readUint16LE();
+	if (chunkType != PREFIX_TYPE)
+		return;
+	uint32 offset = 6;
+	while (offset < chunkSize) {
+		uint32 subchunkSize = _fileStream->readUint32LE();
+		uint16 subchunkType = _fileStream->readUint16LE();
+		switch (subchunkType) {
+		case CEL_DATA:
+			_fileStream->skip(2); // Unknown field
+			_center.x = _fileStream->readUint16LE();
+			_center.y = _fileStream->readUint16LE();
+			_fileStream->skip(subchunkSize - 6 - 6);
+			break;
+		default:
+			_fileStream->skip(subchunkSize - 6);
+			break;
+		}
+		offset += subchunkSize;
+	}
 }
 
 } // End of namespace Video

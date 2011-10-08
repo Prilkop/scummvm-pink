@@ -60,12 +60,15 @@ public:
 	 * @note this may return 0, in which case the last frame should be kept on screen
 	 */
 	const Graphics::Surface *decodeNextFrame();
+	Graphics::Surface *getDecodedFrame() const { return _surface; }
 
 	bool isVideoLoaded() const { return _fileStream != 0; }
 	uint16 getWidth() const { return _surface->w; }
 	uint16 getHeight() const { return _surface->h; }
 	uint32 getFrameCount() const { return _frameCount; }
 	Graphics::PixelFormat getPixelFormat() const { return Graphics::PixelFormat::createFormatCLUT8(); }
+	uint16 getX() const { return _center.x - getWidth() / 2; }
+	uint16 getY() const { return _center.y - getHeight() / 2; }
 
 	const Common::List<Common::Rect> *getDirtyRects() const { return &_dirtyRects; }
 	void clearDirtyRects() { _dirtyRects.clear(); }
@@ -87,11 +90,13 @@ private:
 	void decodeByteRun(uint8 *data);
 	void decodeDeltaFLC(uint8 *data);
 	void unpackPalette(uint8 *mem);
+	void readPrefixChunk();
 
 	Common::SeekableReadStream *_fileStream;
 	Graphics::Surface *_surface;
 	uint32 _frameCount;
 	Common::Rational _frameRate;
+	Common::Point _center;
 
 	Common::List<Common::Rect> _dirtyRects;
 };
