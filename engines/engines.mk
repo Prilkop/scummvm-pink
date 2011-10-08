@@ -212,3 +212,8 @@ ifdef ENABLE_TUCKER
 DEFINES += -DENABLE_TUCKER=$(ENABLE_TUCKER)
 MODULES += engines/tucker
 endif
+
+ifdef ENABLE_PINK
+DEFINES += -DENABLE_PINK=$(ENABLE_PINK)
+MODULES += engines/pink
+endif
