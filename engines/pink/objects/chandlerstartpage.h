@@ -2,11 +2,11 @@
 #define PINK_CHANDLERSTARTPAGE_H
 
 #include "common/scummsys.h"
-#include "chandler.h"
+#include "chandlersequences.h"
 
 namespace Pink {
 
-	class CHandlerStartPage : public CHandler {
+	class CHandlerStartPage : public CHandlerSequences {
 	public:
 		static CObject *createObject();
 		static CRuntimeClass *RuntimeClass();
