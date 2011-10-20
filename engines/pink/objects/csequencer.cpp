@@ -4,12 +4,14 @@
 
 #include "common/str.h"
 #include "common/array.h"
+#include "pink/pink.h"
 
 #include "csequence.h"
 
+
 namespace Pink {
 
-	CSequencer::CSequencer() : sequences(NULL), timers(NULL) {
+	CSequencer::CSequencer() : sequences(NULL), timers(NULL), _current_sequence(NULL) {
 	}
 
 
@@ -19,8 +21,18 @@ namespace Pink {
 	}
 
 	void CSequencer::deserialize(CArchive &archive) {
-		sequences = archive.readCObArray();
+		sequences = archive.readCObArray(CSequence::RuntimeClass());
 		timers = archive.readCObArray();
+
+		_current_sequence = (CSequence *)*(sequences->begin());
+	}
+
+	void CSequencer::init(PinkEngine *pink) {
+		_current_sequence->init(pink);
+	}
+
+	void CSequencer::execute(PinkEngine *pink) {
+
 	}
 
 };

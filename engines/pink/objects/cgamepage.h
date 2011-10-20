@@ -13,7 +13,6 @@ namespace Pink {
 	class CCursorMgr;
 	class CWalkMgr;
 	class CSequencer;
-	class CLeadActor;
 }
 
 namespace Pink {
@@ -30,11 +29,13 @@ namespace Pink {
 		virtual void deserialize(CArchive &archive);
 		virtual void readFromOrb(CArchive &archive);
 
+		virtual void init(PinkEngine *pink);
+		virtual void execute(PinkEngine *pink);
+
 		CModule *_module;
 		CCursorMgr *cursor_manager;
 		CWalkMgr *walk_manager;
 		CSequencer *sequencer;
-		CLeadActor *lead_actor;
 		Common::Array<CObject *>*handlers;
 	};
 

@@ -14,7 +14,7 @@
 namespace Pink {
 
 	CGamePage::CGamePage() : cursor_manager(NULL), walk_manager(NULL), 
-			sequencer(NULL), lead_actor(NULL), handlers(NULL) {
+			sequencer(NULL), handlers(NULL) {
 		cursor_manager = new CCursorMgr();
 		walk_manager = new CWalkMgr();
 		sequencer = new CSequencer();
@@ -45,6 +45,18 @@ namespace Pink {
 		walk_manager->deserialize(archive);
 		sequencer->deserialize(archive);
 		handlers = archive.readCObArray();
+
+		sequencer->page = this;
+	}
+
+	void CGamePage::init(PinkEngine *pink) {
+		CPage::init(pink);
+		sequencer->init(pink);
+	}
+
+	void CGamePage::execute(PinkEngine *pink) {
+		CPage::execute(pink);
+		sequencer->execute(pink);
 	}
 
 };

@@ -9,6 +9,7 @@ namespace Common {
 }
 
 namespace Pink {
+	class PinkEngine;
 	class CSequencer;
 }
 
@@ -25,8 +26,14 @@ namespace Pink {
 
 		virtual void deserialize(CArchive &archive);
 
+		virtual void init(PinkEngine *pink);
+		virtual void execute(PinkEngine *pink);
+
 		CSequencer *sequencer;
 		Common::Array<CObject *> *items;
+
+	private:
+		uint _next_item_index;
 	};
 
 };

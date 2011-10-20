@@ -26,6 +26,7 @@
 #ifndef PINK_ENGINE_H
 #define PINK_ENGINE_H
 
+#include "common/list.h"
 #include "engines/engine.h"
 
 #include "orbfile.h"
@@ -38,10 +39,17 @@ namespace Video {
 	class FlicDecoder;
 }
 
+namespace Audio {
+	class SoundHandle;
+	class AudioStream;
+}
+
 namespace Pink {
 	class CGame;
 	class CModule;
 	class CPage;
+	class CActor;
+	class CActionCEL;
 }
 
 namespace Pink {
@@ -53,15 +61,31 @@ public:
 
 	virtual Common::Error run();
 
+	void stageGfxAction(CActionCEL *action);
+	void unstageActor(CActor *actor);
+
+	void copyToScreen(Video::FlicDecoder *decoder);
+	void askScreenUpdate();
+
+	void playMusic(Audio::SoundHandle *handle, Audio::AudioStream * stream, byte volume);
+	
+	Common::SeekableReadStream *getPageResource(const Common::String *name);
+
 private:
 	Common::Error init();
-	void draw(Common::Array<Video::FlicDecoder *> **layers, size_t layerscount);
-
-	OrbFile _orbFile;
+	void execute();
+	void draw();
+	
+	OrbFile _orb_file;
 
 	CGame *_game;
 	CModule *_module;
 	CPage *_page;
+
+	static const int _layers_count = 100;
+	Common::List<CActionCEL *> _gfx_layer_actions[_layers_count];
+
+	bool screen_update_needed;
 };
 } // namespace Pink
 

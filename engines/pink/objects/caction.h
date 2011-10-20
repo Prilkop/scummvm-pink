@@ -5,6 +5,7 @@
 #include "cnamedobject.h"
 
 namespace Pink {
+	class PinkEngine;
 	class CActor;
 }
 
@@ -20,6 +21,10 @@ namespace Pink {
 		virtual CRuntimeClass *getRuntimeClass();
 
 		virtual void deserialize(CArchive &archive);
+
+		virtual void init(PinkEngine *pink) {};
+		virtual void execute(PinkEngine *pink) {};
+		virtual void destroy(PinkEngine *pink) {};
 
 		CActor *actor;
 	};

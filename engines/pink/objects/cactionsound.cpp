@@ -3,6 +3,11 @@
 #include "cruntimeclass.h"
 
 #include "common/str.h"
+#include "audio/audiostream.h"
+#include "audio/decoders/wave.h"
+#include "audio/mixer.h"
+
+#include "pink/pink.h"
 
 namespace Pink {
 
@@ -20,6 +25,14 @@ namespace Pink {
 		volume = archive.readDWORD();
 		loop = archive.readDWORD();
 		background = archive.readDWORD();
+	}
+
+	void CActionSound::init(PinkEngine *pink) {
+		CAction::init(pink);
+		Audio::RewindableAudioStream *as = Audio::makeWAVStream(pink->getPageResource(sound), DisposeAfterUse::YES);
+		if (background) {
+			pink->playMusic(&_handle, as, volume);
+		}
 	}
 
 };

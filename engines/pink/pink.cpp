@@ -29,6 +29,7 @@
 #include "common/types.h"
 #include "common/error.h"
 #include "common/events.h"
+#include "common/list.h"
 
 #include "engines/util.h"
 #include "video/flic_decoder.h"
@@ -63,82 +64,92 @@ namespace Pink {
 			return res;
 		}
 
-		Common::Array<Video::FlicDecoder *> *layers[100] = {NULL};
-		const Common::Array<CActor *> *actors = _page->actors;
+		_page->init(this);
 
-		for (uint32 i = 0; i < actors->size(); i++) {
-			CActor *actor = (*actors)[i];
-			const Common::Array<CAction *> *actions = actor->actions;
-			for (uint32 j = 0; j < actions->size(); j++) {
-				CAction *action = (*actions)[j];
-				if (CActionCEL::RuntimeClass()->isInstance((CObject *)action)) {
-					CActionCEL *actionCEL = (CActionCEL *)action;
-					if (!layers[actionCEL->z])
-						layers[actionCEL->z] = new Common::Array<Video::FlicDecoder *>();
-					Video::FlicDecoder *decoder = new Video::FlicDecoder();
-					decoder->loadStream(_orbFile.getResource(_page->name, actionCEL->cel));
-					layers[actionCEL->z]->push_back(decoder);
-				} else if (CActionSound::RuntimeClass()->isInstance((CObject *)action)) {
-					CActionSound *actionSound = (CActionSound *)action;
-					Audio::RewindableAudioStream *as = Audio::makeWAVStream(_orbFile.getResource(_page->name, actionSound->sound), DisposeAfterUse::YES);
-					Audio::SoundHandle handle;
-					_system->getMixer()->playStream(Audio::Mixer::kMusicSoundType, &handle, as);
-				}
-			}
-		}
 	
 		while (!shouldQuit()) {
 			Common::Event event;
 			while (_eventMan->pollEvent(event)) {}
-			draw(layers, sizeof(layers) / sizeof(*layers));
+			execute();
 		}
 		return Common::kNoError;
 	}
 
 	Common::Error PinkEngine::init() {
-		Common::Error res = _orbFile.open("pptp.orb");
+		Common::Error res = _orb_file.open("pptp.orb");
 		if (res.getCode() != Common::kNoError)
 			return res;
 
-		_game = _orbFile.loadGame("PinkGame");
-		_module = _orbFile.loadModule(_game->modules->at(0)->name);
-		_page = _orbFile.loadPage(_module, _module->pages->at(0)->name);
+		_game = _orb_file.loadGame("PinkGame");
+		_module = _orb_file.loadModule(_game->modules->at(0)->name);
+		_page = _orb_file.loadPage(_module, _module->pages->at(0)->name);
 		initGraphics(640, 480, true);
 
 		return Common::kNoError;
 	}
 
-	void PinkEngine::draw(Common::Array<Video::FlicDecoder *> **layers, size_t layerscount) {
-		bool update_needed = false;
-		for (Common::Array<Video::FlicDecoder *> **layerdecoders = layers;
-				layerdecoders < layers + layerscount;
-				layerdecoders++) {
-			if (*layerdecoders == NULL)
-				continue;
-			for (uint32 i = 0; i < (*layerdecoders)->size(); i++) {
-				Video::FlicDecoder *decoder = (**layerdecoders)[i];
-				if (!decoder->getTimeToNextFrame() && !decoder->endOfVideo()) {
-					decoder->decodeNextFrame();
-					update_needed = true;
+	void PinkEngine::stageGfxAction(CActionCEL *action) {
+		unstageActor(action->actor);
+		_gfx_layer_actions[action->z].push_back(action);
+	}
+
+	void PinkEngine::unstageActor(CActor *actor) {
+		for (uint i = 0; i < _layers_count; i++) {
+			Common::List<CActionCEL *> *layer_actions = &_gfx_layer_actions[i];
+			for (Common::List<CActionCEL *>::iterator iter = layer_actions->begin();
+					 iter != layer_actions->end();
+					 iter++) {
+				CAction *action = (*iter);
+				if (action->actor == actor) {
+					layer_actions->erase(iter);
+					return;
 				}
-			}
+			}	
 		}
-		if (update_needed) {
-			for (Common::Array<Video::FlicDecoder *> **layerdecoders = layers;
-					layerdecoders < layers + layerscount;
-					layerdecoders++) {
-				if (*layerdecoders == NULL)
-					continue;
-				for (uint32 i = 0; i < (*layerdecoders)->size(); i++) {
-					Video::FlicDecoder *decoder = (**layerdecoders)[i];
-					decoder->setSystemPalette();
-					Graphics::Surface *frame = decoder->getDecodedFrame();
-					_system->copyRectToScreen((byte *)frame->pixels, frame->pitch, decoder->getX(),
-							decoder->getY(), decoder->getWidth(), decoder->getHeight());
-				}
-			}
-			_system->updateScreen();
+		
+		askScreenUpdate();
+	}
+
+	void PinkEngine::copyToScreen(Video::FlicDecoder *decoder) {
+		decoder->setSystemPalette();
+		Graphics::Surface *frame = decoder->getDecodedFrame();
+		_system->copyRectToScreen((byte *)frame->pixels, frame->pitch, decoder->getX(),
+				decoder->getY(), decoder->getWidth(), decoder->getHeight());
+	}
+
+	Common::SeekableReadStream *PinkEngine::getPageResource(const Common::String *name) {
+		return _orb_file.getResource(_page->name, name);
+	}
+
+	void PinkEngine::execute() {
+		_page->execute(this);
+		if (screen_update_needed) {
+			screen_update_needed = false;
+			draw();
 		}
+	}
+
+	void PinkEngine::draw() {
+		for (uint i = 0; i < _layers_count; i++) {
+			Common::List<CActionCEL *> *layer_actions = &_gfx_layer_actions[i];
+
+			for (Common::List<CActionCEL *>::iterator iter = layer_actions->begin();
+				iter != layer_actions->end();
+				iter++) {
+					CActionCEL *action = (*iter);
+					action->draw(this);
+			}	
+		}
+		_system->updateScreen();
+	}
+
+	void PinkEngine::askScreenUpdate()	{
+		screen_update_needed = true;
+	}
+
+	void PinkEngine::playMusic(Audio::SoundHandle *handle, Audio::AudioStream * stream, byte volume) {
+		volume = (byte)((int)volume * 255 / 100);
+		_system->getMixer()->playStream(Audio::Mixer::kMusicSoundType, handle, stream, -1, volume);
 	}
 
 } // namespace Pink

@@ -8,9 +8,17 @@ namespace Common {
 	class String;
 }
 
+namespace Video {
+	class FlicDecoder;
+}
+
+namespace Pink {
+	class PinkEngine;
+}
+
 namespace Pink {
 
-	class CActionCEL : public CAction {;
+	class CActionCEL : public CAction {
 	public:
 		CActionCEL();
 		virtual ~CActionCEL();
@@ -21,8 +29,17 @@ namespace Pink {
 
 		virtual void deserialize(CArchive &archive);
 
+		virtual void init(PinkEngine *pink);
+		virtual void execute(PinkEngine *pink);
+		virtual void destroy(PinkEngine *pink);
+
+		virtual void draw(PinkEngine *pink);
+
 		Common::String *cel;
 		uint32 z;
+
+	private:
+		Video::FlicDecoder *decoder;
 	};
 
 };

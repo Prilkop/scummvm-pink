@@ -2,6 +2,7 @@
 #define PINK_CACTIONSOUND_H
 
 #include "common/scummsys.h"
+#include "audio/mixer.h"
 #include "caction.h"
 
 namespace Common {
@@ -21,10 +22,15 @@ namespace Pink {
 
 		virtual void deserialize(CArchive &archive);
 
+		virtual void init(PinkEngine *pink);
+
 		Common::String *sound;
 		uint32 volume;
 		bool loop;
 		bool background;
+
+	private:
+		Audio::SoundHandle _handle;
 	};
 
 };

@@ -9,8 +9,9 @@ namespace Common {
 }
 
 namespace Pink {
+	class PinkEngine;
 	class CSequence;
-	class CPage;
+	class CGamePage;
 }
 
 namespace Pink {
@@ -26,9 +27,15 @@ namespace Pink {
 
 		virtual void deserialize(CArchive &archive);
 
+		virtual void init(PinkEngine *pink);
+		virtual void execute(PinkEngine *pink);
+
 		Common::Array<CObject *> *sequences;
 		Common::Array<CObject *> *timers;
-		CPage *page;
+		CGamePage *page;
+
+	private:
+		CSequence *_current_sequence;
 	};
 
 };

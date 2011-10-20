@@ -9,7 +9,7 @@
 
 namespace Pink {
 
-	CPage::CPage() : directory(NULL), actors(NULL) {
+	CPage::CPage() : directory(NULL), actors(NULL), lead_actor(NULL) {
 	}
 
 	CPage::~CPage() {
@@ -21,6 +21,10 @@ namespace Pink {
 		this->CNamedObject::deserialize(archive);
 		directory = archive.readCString();
 		actors = (Common::Array<CActor *> *)archive.readCObArray(CActor::RuntimeClass());
+		for (uint32 i = 0; i < actors->size(); i++) {
+			CActor *actor = actors->at(i);
+			_actors_map[*(actor->name)] = actor;
+		}
 	}
 
 	void CPage::readFromOrb(CArchive &archive) {
@@ -28,4 +32,25 @@ namespace Pink {
 		this->CPage::deserialize(archive);
 	}
 
+	void CPage::init(PinkEngine *pink) {
+		for (uint i = 0; i < actors->size(); i++) {
+			actors->at(i)->init(pink);
+		}
+	}
+
+	void CPage::execute(PinkEngine *pink) {
+		for (uint i = 0; i < actors->size(); i++) {
+			actors->at(i)->execute(pink);
+		}
+	}
+
+	void CPage::destroy(PinkEngine *pink) {
+		for (uint i = 0; i < actors->size(); i++) {
+			actors->at(i)->destroy(pink);
+		}
+	}
+
+	CActor *CPage::getActor(const Common::String &name) {
+		return _actors_map.getVal(name, NULL);
+	}
 };

@@ -2,6 +2,8 @@
 #define PINK_CPAGE_H
 
 #include "common/str.h"
+#include "common/hash-str.h"
+
 #include "cnamedobject.h"
 
 namespace Common {
@@ -10,7 +12,9 @@ namespace Common {
 }
 
 namespace Pink {
+	class PinkEngine;
 	class CActor;
+	class CLeadActor;
 }
 
 namespace Pink {
@@ -27,8 +31,18 @@ namespace Pink {
 		virtual void deserialize(CArchive &archive);
 		virtual void readFromOrb(CArchive &archive);
 
+		virtual void init(PinkEngine *pink);
+		virtual void execute(PinkEngine *pink);
+		virtual void destroy(PinkEngine *pink);
+
+		virtual CActor *getActor(const Common::String &name);
+
 		Common::String *directory;
 		Common::Array<CActor *> *actors;
+		CLeadActor *lead_actor;
+
+	private:
+		Common::HashMap<Common::String, CActor *> _actors_map;
 	};
 
 };

@@ -2,6 +2,8 @@
 #define PINK_CACTOR_H
 
 #include "common/scummsys.h"
+#include "common/hash-str.h"
+
 #include "cnamedobject.h"
 
 namespace Common {
@@ -9,6 +11,7 @@ namespace Common {
 }
 
 namespace Pink {
+	class PinkEngine;
 	class CPage;
 	class CAction;
 }
@@ -26,8 +29,21 @@ namespace Pink {
 
 		virtual void deserialize(CArchive &archive);
 
+		virtual void init(PinkEngine *pink);
+		virtual void execute(PinkEngine *pink);
+		virtual void destroy(PinkEngine *pink);
+		
+		virtual CAction *getAction(const Common::String &name);
+
+		CAction *getCurrentAction();
+		void setCurrentAction(const Common::String &name);
+
 		CPage *page;
 		Common::Array<CAction *>*actions;
+
+	private:
+		Common::HashMap<Common::String, CAction *> _actions_map;
+		CAction *_current_action;
 	};
 
 };
