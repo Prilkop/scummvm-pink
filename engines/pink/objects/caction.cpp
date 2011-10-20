@@ -20,6 +20,4 @@ namespace Pink {
 		actor = (CActor *)archive.readCObject();
 	}
 
-	CRUNTIMECLASS_DEFINITION(CAction)
-
 };

@@ -24,6 +24,4 @@ namespace Pink {
 		sequencer = (CSequencer *)archive.readCObject();
 	}
 
-	CRUNTIMECLASS_DEFINITION(CLeadActor)
-
 };
