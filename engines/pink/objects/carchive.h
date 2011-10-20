@@ -37,11 +37,8 @@ namespace Pink {
 
 		Common::Array<CObject *> &CArchive::readCObArray(Common::Array<CObject *> &arr);
 		Common::Array<CObject *> &CArchive::readCObArray(Common::Array<CObject *> &arr, CRuntimeClass *runtimeclass);
-
-		/*template<class T>
-		Common::Array<T *> *CArchive::readCObArray() {
-			return (Common::Array<T *>)readCObArray(T::RuntimeClass());
-		}*/
+	
+		Common::Array<Common::String *> *CArchive::readCStringArray();
 		
 	private:
 		Common::File *_file;

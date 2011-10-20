@@ -75,8 +75,10 @@ namespace Pink {
 				_file->read(classname, classnameLength);
 				classname[classnameLength] = 0;
 				runtimeclass = CRuntimeClass::getRuntimeClassByName(classname);
-				if (!runtimeclass)
+				if (!runtimeclass) {
+					warning("PINK: Could not find class named \"%s\"", classname);
 					return NULL;
+				}
 				mapClass(runtimeclass);
 			} else {
 				uint32 index = tag & 0x7fffffff;
@@ -90,12 +92,21 @@ namespace Pink {
 			obj->deserialize(*this);
 			return obj;
 		} else {
-			return _known_objects[tag];
+			if (_known_items_length > tag)
+				return _known_objects[tag];
+			else
+				return NULL;
 		}
 	}
 
 	Common::Array<CObject *> *CArchive::readCObArray() {
 		return readCObArray(NULL);
+	}
+
+	Common::Array<CObject *> *CArchive::readCObArray(CRuntimeClass *runtimeclass) {
+		Common::Array<CObject *> *arr = new Common::Array<CObject *>();
+		readCObArray(*arr);
+		return arr;
 	}
 
 	Common::Array<CObject *> &CArchive::readCObArray(Common::Array<CObject *> &arr) {
@@ -125,9 +136,15 @@ namespace Pink {
 		return arr;
 	}
 
-	Common::Array<CObject *> *CArchive::readCObArray(CRuntimeClass *runtimeclass) {
-		Common::Array<CObject *> *arr = new Common::Array<CObject *>();
-		readCObArray(*arr);
+	Common::Array<Common::String *> *CArchive::readCStringArray() {
+		uint16 length = _file->readUint16LE();
+		Common::String **tmparray = (Common::String **)calloc(length, sizeof(Common::String *));
+		for (uint16 i = 0; i < length; i++) {
+			Common::String *obj = readCString();
+			tmparray[i] = obj;
+		}
+		Common::Array<Common::String *> *arr = new Common::Array<Common::String *>(tmparray, length);
+		free(tmparray);
 		return arr;
 	}
 
