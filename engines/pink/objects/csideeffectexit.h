@@ -1,7 +1,7 @@
 #ifndef PINK_CSIDEEFFECTEXIT_H
 #define PINK_CSIDEEFFECTEXIT_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "csideeffect.h"
 
 namespace Common {

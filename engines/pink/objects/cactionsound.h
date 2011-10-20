@@ -1,7 +1,7 @@
 #ifndef PINK_CACTIONSOUND_H
 #define PINK_CACTIONSOUND_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "caction.h"
 
 namespace Common {

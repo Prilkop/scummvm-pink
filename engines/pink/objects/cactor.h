@@ -1,7 +1,7 @@
 #ifndef PINK_CACTOR_H
 #define PINK_CACTOR_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "cnamedobject.h"
 
 namespace Common {

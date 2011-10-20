@@ -1,7 +1,7 @@
 #ifndef PINK_CSEQUENCEITEMLEADER_H
 #define PINK_CSEQUENCEITEMLEADER_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "csequenceitem.h"
 
 namespace Pink {

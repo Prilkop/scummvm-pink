@@ -1,7 +1,7 @@
 #ifndef PINK_CMODULEPROXY_H
 #define PINK_CMODULEPROXY_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "cnamedobject.h"
 
 namespace Pink {

@@ -1,7 +1,7 @@
 #ifndef PINK_CSEQUENCEITEMDEFAULTACTION_H
 #define PINK_CSEQUENCEITEMDEFAULTACTION_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "csequenceitem.h"
 
 namespace Pink {

@@ -1,7 +1,7 @@
 #ifndef PINK_CACTION_H
 #define PINK_CACTION_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "cnamedobject.h"
 
 namespace Pink {

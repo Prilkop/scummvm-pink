@@ -1,7 +1,7 @@
 #ifndef PINK_CWALKMGR_H
 #define PINK_CWALKMGR_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "cobject.h"
 
 namespace Common {

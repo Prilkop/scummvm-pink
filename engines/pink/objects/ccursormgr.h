@@ -1,7 +1,7 @@
 #ifndef PINK_CCURSORMGR_H
 #define PINK_CCURSORMGR_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "cobject.h"
 
 namespace Pink {

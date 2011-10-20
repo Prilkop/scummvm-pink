@@ -1,7 +1,7 @@
 #ifndef PINK_CHANDLERMGR_H
 #define PINK_CHANDLERMGR_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "cobject.h"
 
 namespace Common {

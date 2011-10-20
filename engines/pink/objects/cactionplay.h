@@ -1,7 +1,7 @@
 #ifndef PINK_CACTIONPLAY_H
 #define PINK_CACTIONPLAY_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "cactionstill.h"
 
 namespace Pink {

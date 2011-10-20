@@ -1,7 +1,7 @@
 #ifndef PINK_CACTIONCEL_H
 #define PINK_CACTIONCEL_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "caction.h"
 
 namespace Common {

@@ -1,7 +1,7 @@
 #ifndef PINK_CHANDLERSTARTPAGE_H
 #define PINK_CHANDLERSTARTPAGE_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "chandler.h"
 
 namespace Pink {

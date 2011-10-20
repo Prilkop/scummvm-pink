@@ -1,7 +1,7 @@
 #ifndef PINK_CACTIONHIDE_H
 #define PINK_CACTIONHIDE_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "caction.h"
 
 namespace Pink {

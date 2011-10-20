@@ -1,7 +1,7 @@
 #ifndef PINK_CSIDEEFFECT_H
 #define PINK_CSIDEEFFECT_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "cobject.h"
 
 namespace Pink {

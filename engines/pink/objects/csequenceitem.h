@@ -1,7 +1,7 @@
 #ifndef PINK_CSEQUENCEITEM_H
 #define PINK_CSEQUENCEITEM_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "cobject.h"
 
 namespace Common {

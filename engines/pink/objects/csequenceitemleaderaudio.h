@@ -1,7 +1,7 @@
 #ifndef PINK_CSEQUENCEITEMLEADERAUDIO_H
 #define PINK_CSEQUENCEITEMLEADERAUDIO_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "csequenceitemleader.h"
 
 namespace Pink {

@@ -1,7 +1,7 @@
 #ifndef PINK_CGAMEPAGE_H
 #define PINK_CGAMEPAGE_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "cpage.h"
 
 namespace Common {

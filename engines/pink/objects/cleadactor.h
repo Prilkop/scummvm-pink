@@ -1,7 +1,7 @@
 #ifndef PINK_CLEADACTOR_H
 #define PINK_CLEADACTOR_H
 
-#include "common\scummsys.h"
+#include "common/scummsys.h"
 #include "cactor.h"
 
 namespace Pink {
