@@ -32,11 +32,12 @@
 #include "objects/csideeffectexit.h"
 #include "objects/csideeffectmodulevariable.h"
 #include "objects/csideeffectvariable.h"
+#include "objects/csupportingactor.h"
 #include "objects/cwalkmgr.h"
 
 namespace Pink {
 
-	uint32 CRuntimeClass::runtimeclassesCount = 31;
+	uint32 CRuntimeClass::runtimeclassesCount = 32;
 
 	CRuntimeClass CRuntimeClass::runtimeclasses[] = {
 		REGISTER_RUNTIME_CLASS(CObject, NULL),
@@ -69,6 +70,7 @@ namespace Pink {
 		REGISTER_RUNTIME_CLASS(CSideEffectExit, &runtimeclasses[26]),
 		REGISTER_RUNTIME_CLASS(CSideEffectModuleVariable, &runtimeclasses[29]),
 		REGISTER_RUNTIME_CLASS(CSideEffectVariable, &runtimeclasses[26]),
+		REGISTER_RUNTIME_CLASS(CSupportingActor, &runtimeclasses[7]),
 		REGISTER_RUNTIME_CLASS(CWalkMgr, &runtimeclasses[0]),
 	};
 
@@ -102,6 +104,7 @@ namespace Pink {
 	IMPLEMENT_RUNTIME_CLASS(27, CSideEffectExit);
 	IMPLEMENT_RUNTIME_CLASS(28, CSideEffectModuleVariable);
 	IMPLEMENT_RUNTIME_CLASS(29, CSideEffectVariable);
-	IMPLEMENT_RUNTIME_CLASS(30, CWalkMgr);
+	IMPLEMENT_RUNTIME_CLASS(30, CSupportingActor);
+	IMPLEMENT_RUNTIME_CLASS(31, CWalkMgr);
 
 }
