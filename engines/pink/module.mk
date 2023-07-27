@@ -1,7 +1,7 @@
 MODULE := engines/pink
 
 MODULE_OBJS := \
-	detection.o \
+    detection.o \
     orbfile.o \
     pink.o \
     runtimeregistry.o \
@@ -18,6 +18,7 @@ MODULE_OBJS := \
     objects/cgamepage.o \
     objects/chandler.o \
     objects/chandlermgr.o \
+    objects/chandlersequences.o \
     objects/chandlerstartpage.o \
     objects/cleadactor.o \
     objects/cmodule.o \
@@ -34,6 +35,9 @@ MODULE_OBJS := \
     objects/csequencer.o \
     objects/csideeffect.o \
     objects/csideeffectexit.o \
+    objects/csideeffectmodulevariable.o \
+    objects/csideeffectvariable.o \
+    objects/csupportingactor.o \
     objects/cwalkmgr.o
 
 # This module can be built as a plugin

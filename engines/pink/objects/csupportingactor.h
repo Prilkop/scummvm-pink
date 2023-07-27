@@ -2,14 +2,16 @@
 #define PINK_CSUPPORTINGACTOR_H
 
 #include "common/scummsys.h"
+
 #include "cactor.h"
+#include "chandlermgr.h"
 
 namespace Common {
 	class String;
 }
 
 namespace Pink {
-	class CHandlerMgr;
+	class PinkEngine;
 }
 
 namespace Pink {
@@ -28,7 +30,7 @@ namespace Pink {
 		Common::String *location;
 		Common::String *pda_link;
 		Common::String *cursor;
-		CHandlerMgr *handler_manager;
+		CHandlerMgr handler_manager;
 	};
 
 };

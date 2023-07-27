@@ -7,14 +7,13 @@
 
 namespace Pink {
 
-	CSupportingActor::CSupportingActor() : handler_manager(NULL) {
+	CSupportingActor::CSupportingActor() : location(NULL), pda_link(NULL), cursor(NULL) {
 	}
 
 	CSupportingActor::~CSupportingActor() {
 		delete location;
 		delete pda_link;
 		delete cursor;
-		delete handler_manager;
 	}
 
 	void CSupportingActor::deserialize(CArchive &archive) {
@@ -22,7 +21,7 @@ namespace Pink {
 		location = archive.readCString();
 		pda_link = archive.readCString();
 		cursor = archive.readCString();
-		handler_manager = (CHandlerMgr *)archive.readCObject();
+		handler_manager.deserialize(archive);
 	}
 
 };

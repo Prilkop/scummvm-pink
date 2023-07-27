@@ -82,7 +82,7 @@ namespace Pink {
 
 		_game = _orb_file.loadGame("PinkGame");
 		_module = _orb_file.loadModule(_game->modules->at(0)->name);
-		_page = _orb_file.loadPage(_module, _module->pages->at(0)->name);
+		_page = _orb_file.loadPage(_module, _module->pages->at(1)->name);
 		initGraphics(640, 480, true);
 
 		return Common::kNoError;
